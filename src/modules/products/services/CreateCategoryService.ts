@@ -10,7 +10,9 @@ class CreateCategoryService {
   constructor(private categoriesRepository: ICategoriesRepository) {}
 
   public async execute({ name }: IRequest): Promise<Category> {
-    const checkCategoryExist = await this.categoriesRepository.findByName(name);
+    const checkCategoryExist = await this.categoriesRepository.findDuplicatedForCreate(
+      name,
+    );
 
     if (checkCategoryExist) {
       throw new AppError('Category already registered');

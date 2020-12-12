@@ -17,7 +17,9 @@ class UsersRepository implements IUsersRepository {
     return users;
   }
 
-  public async findByEmail(email: string): Promise<User | undefined> {
+  public async findDuplicatedForCreate(
+    email: string,
+  ): Promise<User | undefined> {
     const user = await this.ormRepository.findOne({
       where: { email },
     });

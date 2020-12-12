@@ -31,13 +31,13 @@ export default class ProductsController {
 
   public async update(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
-    const { name, email } = request.body;
+    const { name, email, password } = request.body;
 
     const usersRepository = new UsersRepository();
 
     const updateUser = new UpdateUserService(usersRepository);
 
-    const user = await updateUser.execute({ id, name, email });
+    const user = await updateUser.execute({ id, name, email, password });
 
     return response.json(user);
   }
