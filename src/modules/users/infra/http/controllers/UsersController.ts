@@ -6,7 +6,7 @@ import CreateUserService from '@modules/users/services/CreateUserService';
 import ListUserService from '@modules/users/services/ListUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
 
-export default class ProductsController {
+export default class UsersController {
   public async create(request: Request, response: Response): Promise<Response> {
     const { name, email, password } = request.body;
 

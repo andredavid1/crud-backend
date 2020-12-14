@@ -1,3 +1,4 @@
+import AppError from '@shared/errors/AppError';
 import FakeUserRepository from '../../repositories/fakes/FakeUsersRepository';
 import CreateUserService from '../CreateUserService';
 
@@ -13,7 +14,24 @@ describe('CreateUserService', () => {
     });
 
     expect(user).toHaveProperty('id');
-    expect(user.name).toBe('user');
-    expect(user.email).toBe('user@email.com');
+  });
+
+  it('should not be able to create a user with an already registered email', async () => {
+    const fakeUserRepository = new FakeUserRepository();
+    const createUser = new CreateUserService(fakeUserRepository);
+
+    await createUser.execute({
+      name: 'user',
+      email: 'email@email.com',
+      password: 'password',
+    });
+
+    expect(
+      createUser.execute({
+        name: 'user2',
+        email: 'email@email.com',
+        password: 'password',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 });

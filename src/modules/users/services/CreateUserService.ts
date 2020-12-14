@@ -14,9 +14,7 @@ class CreateUserService {
   constructor(private usersRepository: IUsersRepository) {}
 
   public async execute({ name, email, password }: IRequest): Promise<User> {
-    const checkUserExist = await this.usersRepository.findDuplicatedForCreate(
-      email,
-    );
+    const checkUserExist = await this.usersRepository.findByEmail(email);
 
     if (checkUserExist) {
       throw new AppError('User already registered');
