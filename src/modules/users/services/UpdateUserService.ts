@@ -1,8 +1,7 @@
-import { hash } from 'bcryptjs';
-
 import AppError from '@shared/errors/AppError';
 import User from '../infra/typeorm/entities/User';
 import IUsersRepository from '../repositories/IUsersRepository';
+import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 
 interface IRequest {
   id: string;
@@ -12,7 +11,10 @@ interface IRequest {
 }
 
 class UpdateUserService {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor(
+    private usersRepository: IUsersRepository,
+    private hashProvider: IHashProvider,
+  ) {}
 
   public async execute({ id, name, email, password }: IRequest): Promise<User> {
     const checkUserExist = await this.usersRepository.findById(id);
@@ -29,7 +31,7 @@ class UpdateUserService {
       }
     }
 
-    const hashedPassword = await hash(password, 8);
+    const hashedPassword = await this.hashProvider.generateHash(password);
 
     const user = await this.usersRepository.update({
       id,
