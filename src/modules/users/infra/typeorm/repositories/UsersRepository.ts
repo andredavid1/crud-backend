@@ -13,7 +13,11 @@ class UsersRepository implements IUsersRepository {
   }
 
   public async findAll(): Promise<User[] | undefined> {
-    const users = await this.ormRepository.find();
+    const users = await this.ormRepository.find({
+      order: {
+        created_at: 'ASC',
+      },
+    });
 
     return users;
   }

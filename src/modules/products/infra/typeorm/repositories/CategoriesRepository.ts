@@ -12,7 +12,11 @@ class CategoriesRepository implements ICategoriesRepository {
   }
 
   public async findAll(): Promise<Category[] | undefined> {
-    const categories = await this.ormRepository.find();
+    const categories = await this.ormRepository.find({
+      order: {
+        created_at: 'ASC',
+      },
+    });
 
     return categories;
   }
