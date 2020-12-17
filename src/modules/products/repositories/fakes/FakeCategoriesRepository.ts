@@ -12,9 +12,7 @@ class CategoriesRepository implements ICategoriesRepository {
     return this.categories;
   }
 
-  public async findDuplicatedForCreate(
-    name: string,
-  ): Promise<Category | undefined> {
+  public async findDuplicated(name: string): Promise<Category | undefined> {
     const findCategory = this.categories.find(
       category => category.name === name,
     );
@@ -22,13 +20,8 @@ class CategoriesRepository implements ICategoriesRepository {
     return findCategory;
   }
 
-  public async findDuplicatedForUpdate({
-    id,
-    name,
-  }: IUpdateCategoryDTO): Promise<Category | undefined> {
-    const findCategory = this.categories.find(
-      category => category.name === name && category.id !== id,
-    );
+  public async findById(id: string): Promise<Category | undefined> {
+    const findCategory = this.categories.find(category => category.id === id);
 
     return findCategory;
   }

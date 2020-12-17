@@ -10,7 +10,7 @@ class CreateCategoryService {
   constructor(private categoriesRepository: ICategoriesRepository) {}
 
   public async execute({ name }: IRequest): Promise<Category> {
-    const checkCategoryExist = await this.categoriesRepository.findDuplicatedForCreate(
+    const checkCategoryExist = await this.categoriesRepository.findDuplicated(
       name,
     );
 

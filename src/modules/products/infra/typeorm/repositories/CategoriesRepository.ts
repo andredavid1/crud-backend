@@ -1,7 +1,7 @@
 import ICreateCategoryDTO from '@modules/products/dtos/ICreateCategoryDTO';
 import IUpdateCategoryDTO from '@modules/products/dtos/IUpdateCategoryDTO';
 import ICategoriesRepository from '@modules/products/repositories/ICategoriesRepository';
-import { getRepository, Not, Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import Category from '../entities/Category';
 
 class CategoriesRepository implements ICategoriesRepository {
@@ -17,21 +17,16 @@ class CategoriesRepository implements ICategoriesRepository {
     return categories;
   }
 
-  public async findDuplicatedForCreate(
-    name: string,
-  ): Promise<Category | undefined> {
+  public async findDuplicated(name: string): Promise<Category | undefined> {
     const category = await this.ormRepository.findOne({
       where: { name },
     });
     return category;
   }
 
-  public async findDuplicatedForUpdate({
-    id,
-    name,
-  }: IUpdateCategoryDTO): Promise<Category | undefined> {
+  public async findById(id: string): Promise<Category | undefined> {
     const category = await this.ormRepository.findOne({
-      where: { id: Not(id), name },
+      where: { id },
     });
     return category;
   }
