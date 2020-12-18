@@ -11,12 +11,10 @@ class CreateProductService {
   constructor(private productsRepository: IProductsRepository) {}
 
   public async execute({ name, category_id }: IRequest): Promise<Product> {
-    const checkProductExist = await this.productsRepository.findDuplicatedForCreate(
-      {
-        name,
-        category_id,
-      },
-    );
+    const checkProductExist = await this.productsRepository.findDuplicated({
+      name,
+      category_id,
+    });
 
     if (checkProductExist) {
       throw new AppError('Product already registered');

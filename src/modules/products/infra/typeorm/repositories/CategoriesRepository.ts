@@ -1,5 +1,4 @@
-import ICreateCategoryDTO from '@modules/products/dtos/ICreateCategoryDTO';
-import IUpdateCategoryDTO from '@modules/products/dtos/IUpdateCategoryDTO';
+import ICategoryDTO from '@modules/products/dtos/ICategoryDTO';
 import ICategoriesRepository from '@modules/products/repositories/ICategoriesRepository';
 import { getRepository, Repository } from 'typeorm';
 import Category from '../entities/Category';
@@ -35,7 +34,9 @@ class CategoriesRepository implements ICategoriesRepository {
     return category;
   }
 
-  public async create(categoryData: ICreateCategoryDTO): Promise<Category> {
+  public async create(
+    categoryData: Omit<ICategoryDTO, 'id'>,
+  ): Promise<Category> {
     const category = this.ormRepository.create(categoryData);
 
     await this.ormRepository.save(category);
@@ -43,7 +44,7 @@ class CategoriesRepository implements ICategoriesRepository {
     return category;
   }
 
-  public async update(categoryData: IUpdateCategoryDTO): Promise<Category> {
+  public async update(categoryData: ICategoryDTO): Promise<Category> {
     return this.ormRepository.save(categoryData);
   }
 }

@@ -17,9 +17,7 @@ class UpdateCategoryService {
       throw new AppError('Category not found.');
     }
 
-    const existCategory = await this.categoriesRepository.findDuplicated(
-      categoryFound.name,
-    );
+    const existCategory = await this.categoriesRepository.findDuplicated(name);
 
     if (existCategory && existCategory.id !== categoryFound.id) {
       throw new AppError('Category already registered.');

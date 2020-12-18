@@ -1,7 +1,6 @@
-import ICreateProductDTO from '@modules/products/dtos/ICreateProductDTO';
-import IUpdateProductDTO from '@modules/products/dtos/IUpdateProductDTO';
 import IProductsRepository from '@modules/products/repositories/IProductsRepository';
-import { getRepository, Not, Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
+import IProductDTO from '@modules/products/dtos/IProductDTO';
 import Product from '../entities/Product';
 
 class ProductsRepository implements IProductsRepository {
@@ -12,33 +11,33 @@ class ProductsRepository implements IProductsRepository {
   }
 
   public async findAll(): Promise<Product[] | undefined> {
-    const products = await this.ormRepository.find();
+    const products = await this.ormRepository.find({
+      order: {
+        created_at: 'ASC',
+      },
+    });
 
     return products;
   }
 
-  public async findDuplicatedForCreate({
+  public async findDuplicated({
     name,
     category_id,
-  }: ICreateProductDTO): Promise<Product | undefined> {
+  }: Omit<IProductDTO, 'id'>): Promise<Product | undefined> {
     const product = await this.ormRepository.findOne({
       where: { name, category_id },
     });
     return product;
   }
 
-  public async findDuplicatedForUpdate({
-    id,
-    name,
-    category_id,
-  }: IUpdateProductDTO): Promise<Product | undefined> {
+  public async findById(id: string): Promise<Product | undefined> {
     const product = await this.ormRepository.findOne({
-      where: { id: Not(id), name, category_id },
+      where: { id },
     });
     return product;
   }
 
-  public async create(productData: ICreateProductDTO): Promise<Product> {
+  public async create(productData: Omit<IProductDTO, 'id'>): Promise<Product> {
     const product = this.ormRepository.create(productData);
 
     await this.ormRepository.save(product);
@@ -46,7 +45,7 @@ class ProductsRepository implements IProductsRepository {
     return product;
   }
 
-  public async update(product: Product): Promise<Product> {
+  public async update(product: IProductDTO): Promise<Product> {
     return this.ormRepository.save(product);
   }
 }

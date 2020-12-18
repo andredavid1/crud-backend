@@ -1,11 +1,10 @@
-import ICreateCategoryDTO from '../dtos/ICreateCategoryDTO';
-import IUpdateCategoryDTO from '../dtos/IUpdateCategoryDTO';
+import ICategoryDTO from '../dtos/ICategoryDTO';
 import Category from '../infra/typeorm/entities/Category';
 
 export default interface ICategoriesRepository {
-  create(categoryData: ICreateCategoryDTO): Promise<Category>;
+  create(categoryData: Omit<ICategoryDTO, 'id'>): Promise<Category>;
   findAll(): Promise<Category[] | undefined>;
   findDuplicated(name: string): Promise<Category | undefined>;
   findById(id: string): Promise<Category | undefined>;
-  update(categoryData: IUpdateCategoryDTO): Promise<Category>;
+  update(categoryData: ICategoryDTO): Promise<Category>;
 }

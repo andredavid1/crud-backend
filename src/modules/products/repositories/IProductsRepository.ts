@@ -1,15 +1,12 @@
-import ICreateProductDTO from '../dtos/ICreateProductDTO';
-import IUpdateProductDTO from '../dtos/IUpdateProductDTO';
 import Product from '../infra/typeorm/entities/Product';
+import IProductDTO from '../dtos/IProductDTO';
 
 export default interface IProductRepository {
-  create(productData: ICreateProductDTO): Promise<Product>;
+  create(productData: Omit<IProductDTO, 'id'>): Promise<Product>;
   findAll(): Promise<Product[] | undefined>;
-  findDuplicatedForCreate(
-    productData: ICreateProductDTO,
+  findById(id: string): Promise<Product | undefined>;
+  findDuplicated(
+    productData: Omit<IProductDTO, 'id'>,
   ): Promise<Product | undefined>;
-  findDuplicatedForUpdate(
-    productData: IUpdateProductDTO,
-  ): Promise<Product | undefined>;
-  update(productData: IUpdateProductDTO): Promise<Product>;
+  update(productData: IProductDTO): Promise<Product>;
 }

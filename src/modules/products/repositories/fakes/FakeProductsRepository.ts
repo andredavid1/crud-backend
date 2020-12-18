@@ -1,22 +1,21 @@
 import { uuid } from 'uuidv4';
 
-import ICreateProductDTO from '@modules/products/dtos/ICreateProductDTO';
-import IUpdateProductDTO from '@modules/products/dtos/IUpdateProductDTO';
+import IProductDTO from '@modules/products/dtos/IProductDTO';
 import IProductsRepository from '@modules/products/repositories/IProductsRepository';
 
 import Product from '@modules/products/infra/typeorm/entities/Product';
 
-class ProductsRepository implements IProductsRepository {
+class FakeProductsRepository implements IProductsRepository {
   private products: Product[] = [];
 
   public async findAll(): Promise<Product[] | undefined> {
     return this.products;
   }
 
-  public async findDuplicatedForCreate({
+  public async findDuplicated({
     name,
     category_id,
-  }: ICreateProductDTO): Promise<Product | undefined> {
+  }: Omit<IProductDTO, 'id'>): Promise<Product | undefined> {
     const findProduct = this.products.find(
       product => product.name === name && product.category_id === category_id,
     );
@@ -24,17 +23,8 @@ class ProductsRepository implements IProductsRepository {
     return findProduct;
   }
 
-  public async findDuplicatedForUpdate({
-    id,
-    name,
-    category_id,
-  }: IUpdateProductDTO): Promise<Product | undefined> {
-    const findProduct = this.products.find(
-      product =>
-        product.name === name &&
-        product.category_id === category_id &&
-        product.id !== id,
-    );
+  public async findById(id: string): Promise<Product | undefined> {
+    const findProduct = this.products.find(product => product.id === id);
 
     return findProduct;
   }
@@ -42,7 +32,7 @@ class ProductsRepository implements IProductsRepository {
   public async create({
     name,
     category_id,
-  }: ICreateProductDTO): Promise<Product> {
+  }: Omit<IProductDTO, 'id'>): Promise<Product> {
     const product = new Product();
 
     Object.assign(product, { id: uuid(), name, category_id });
@@ -52,7 +42,11 @@ class ProductsRepository implements IProductsRepository {
     return product;
   }
 
-  public async update({ id, name, category_id }: Product): Promise<Product> {
+  public async update({
+    id,
+    name,
+    category_id,
+  }: IProductDTO): Promise<Product> {
     const index = this.products.findIndex(product => product.id === id);
 
     this.products[index].name = name;
@@ -62,4 +56,4 @@ class ProductsRepository implements IProductsRepository {
   }
 }
 
-export default ProductsRepository;
+export default FakeProductsRepository;
