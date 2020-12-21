@@ -25,7 +25,7 @@ describe('UpdateProductService', () => {
     expect(response.name).toBe('new product');
   });
 
-  it('should not be able to update a category with inexistent id', async () => {
+  it('should not be able to update a product with inexistent id', async () => {
     const fakeProductsRepository = new FakeProductsRepository();
 
     const updateProduct = new UpdateProductService(fakeProductsRepository);
@@ -39,7 +39,7 @@ describe('UpdateProductService', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should not be able to update a category with a email already registred', async () => {
+  it('should not be able to update a product duplicated', async () => {
     const fakeProductsRepository = new FakeProductsRepository();
 
     const createProduct = new CreateProductService(fakeProductsRepository);

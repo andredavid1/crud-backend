@@ -36,7 +36,7 @@ describe('UpdateCategoryService', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should not be able to update a category with a email already registred', async () => {
+  it('should not be able to update a category with a name already registred', async () => {
     const fakeCategoryRepository = new FakeCategoryRepository();
 
     const createCategory = new CreateCategoryService(fakeCategoryRepository);

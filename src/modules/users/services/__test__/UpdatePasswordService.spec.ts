@@ -2,10 +2,10 @@ import AppError from '@shared/errors/AppError';
 import FakeUsersRepository from '../../repositories/fakes/FakeUsersRepository';
 import FakeHashProvider from '../../providers/HashProvider/fakes/FakeHashProvider';
 import CreateUserService from '../CreateUserService';
-import UpdateUserService from '../UpdateUserService';
+import UpdatePasswordService from '../UpdatePasswordService';
 
-describe('UpdateUserService', () => {
-  it('should be able to update a user', async () => {
+describe('UpdatePasswordService', () => {
+  it('should be able to update a password of user', async () => {
     const fakeUsersRepository = new FakeUsersRepository();
     const fakeHashProvider = new FakeHashProvider();
 
@@ -14,7 +14,7 @@ describe('UpdateUserService', () => {
       fakeHashProvider,
     );
 
-    const updateUser = new UpdateUserService(
+    const updatePassword = new UpdatePasswordService(
       fakeUsersRepository,
       fakeHashProvider,
     );
@@ -25,23 +25,20 @@ describe('UpdateUserService', () => {
       password: 'password',
     });
 
-    const response = await updateUser.execute({
+    const response = await updatePassword.execute({
       id: user.id,
-      name: 'newName',
-      email: 'newemail@email.com',
-      password: 'newPassword',
+      password: 'password',
+      newPassword: 'newPassword',
     });
 
-    expect(response.name).toBe('newName');
-    expect(response.email).toBe('newemail@email.com');
     expect(response.password).toBe('newPassword');
   });
 
-  it('should not be able to update a user with inexistent id', async () => {
+  it('should not be able to update a password of user with inexistent id', async () => {
     const fakeUsersRepository = new FakeUsersRepository();
     const fakeHashProvider = new FakeHashProvider();
 
-    const updateUser = new UpdateUserService(
+    const updateUser = new UpdatePasswordService(
       fakeUsersRepository,
       fakeHashProvider,
     );
@@ -49,14 +46,13 @@ describe('UpdateUserService', () => {
     expect(
       updateUser.execute({
         id: 'wrongId',
-        name: 'user',
-        email: 'email@email.com',
         password: 'password',
+        newPassword: 'newPassword',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should not be able to update a user with a email already registred', async () => {
+  it('should not be able to update a password of user with wrong old password', async () => {
     const fakeUsersRepository = new FakeUsersRepository();
     const fakeHashProvider = new FakeHashProvider();
 
@@ -65,29 +61,22 @@ describe('UpdateUserService', () => {
       fakeHashProvider,
     );
 
-    const updateUser = new UpdateUserService(
+    const updatePassword = new UpdatePasswordService(
       fakeUsersRepository,
       fakeHashProvider,
     );
 
-    const user1 = await createUser.execute({
-      name: 'user1',
-      email: 'email@user1.com',
-      password: 'password',
-    });
-
-    const user2 = await createUser.execute({
-      name: 'user2',
-      email: 'email@user2.com',
+    const user = await createUser.execute({
+      name: 'user',
+      email: 'email@email.com',
       password: 'password',
     });
 
     expect(
-      updateUser.execute({
-        id: user2.id,
-        name: 'user2',
-        email: user1.email,
-        password: 'password',
+      updatePassword.execute({
+        id: user.id,
+        password: 'wrongPassword',
+        newPassword: 'newPassword',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
