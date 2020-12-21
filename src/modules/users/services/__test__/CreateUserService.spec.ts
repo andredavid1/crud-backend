@@ -20,6 +20,7 @@ describe('CreateUserService', () => {
     });
 
     expect(user).toHaveProperty('id');
+    expect(user.name).toBe('user');
   });
 
   it('should not be able to create a user with an already registered email', async () => {

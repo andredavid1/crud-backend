@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { classToClass } from 'class-transformer';
 
 import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
+import HashProvider from '@modules/users/providers/HashProvider/implementations/BCryptHashProvider';
 import CreateUserService from '@modules/users/services/CreateUserService';
 import ListUserService from '@modules/users/services/ListUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
@@ -11,8 +12,9 @@ export default class UsersController {
     const { name, email, password } = request.body;
 
     const usersRepository = new UsersRepository();
+    const hashProvider = new HashProvider();
 
-    const createUser = new CreateUserService(usersRepository);
+    const createUser = new CreateUserService(usersRepository, hashProvider);
 
     const user = await createUser.execute({ name, email, password });
 
@@ -34,11 +36,12 @@ export default class UsersController {
     const { name, email, password } = request.body;
 
     const usersRepository = new UsersRepository();
+    const hashProvider = new HashProvider();
 
-    const updateUser = new UpdateUserService(usersRepository);
+    const updateUser = new UpdateUserService(usersRepository, hashProvider);
 
     const user = await updateUser.execute({ id, name, email, password });
 
-    return response.json(user);
+    return response.json(classToClass(user));
   }
 }

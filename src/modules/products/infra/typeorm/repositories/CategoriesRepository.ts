@@ -10,6 +10,16 @@ class CategoriesRepository implements ICategoriesRepository {
     this.ormRepository = getRepository(Category);
   }
 
+  public async create(
+    categoryData: Omit<ICategoryDTO, 'id'>,
+  ): Promise<Category> {
+    const category = this.ormRepository.create(categoryData);
+
+    await this.ormRepository.save(category);
+
+    return category;
+  }
+
   public async findAll(): Promise<Category[] | undefined> {
     const categories = await this.ormRepository.find({
       order: {
@@ -20,13 +30,6 @@ class CategoriesRepository implements ICategoriesRepository {
     return categories;
   }
 
-  public async findDuplicated(name: string): Promise<Category | undefined> {
-    const category = await this.ormRepository.findOne({
-      where: { name },
-    });
-    return category;
-  }
-
   public async findById(id: string): Promise<Category | undefined> {
     const category = await this.ormRepository.findOne({
       where: { id },
@@ -34,13 +37,10 @@ class CategoriesRepository implements ICategoriesRepository {
     return category;
   }
 
-  public async create(
-    categoryData: Omit<ICategoryDTO, 'id'>,
-  ): Promise<Category> {
-    const category = this.ormRepository.create(categoryData);
-
-    await this.ormRepository.save(category);
-
+  public async findDuplicated(name: string): Promise<Category | undefined> {
+    const category = await this.ormRepository.findOne({
+      where: { name },
+    });
     return category;
   }
 

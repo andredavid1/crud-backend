@@ -10,6 +10,14 @@ class ProductsRepository implements IProductsRepository {
     this.ormRepository = getRepository(Product);
   }
 
+  public async create(productData: Omit<IProductDTO, 'id'>): Promise<Product> {
+    const product = this.ormRepository.create(productData);
+
+    await this.ormRepository.save(product);
+
+    return product;
+  }
+
   public async findAll(): Promise<Product[] | undefined> {
     const products = await this.ormRepository.find({
       order: {
@@ -20,16 +28,6 @@ class ProductsRepository implements IProductsRepository {
     return products;
   }
 
-  public async findDuplicated({
-    name,
-    category_id,
-  }: Omit<IProductDTO, 'id'>): Promise<Product | undefined> {
-    const product = await this.ormRepository.findOne({
-      where: { name, category_id },
-    });
-    return product;
-  }
-
   public async findById(id: string): Promise<Product | undefined> {
     const product = await this.ormRepository.findOne({
       where: { id },
@@ -37,11 +35,13 @@ class ProductsRepository implements IProductsRepository {
     return product;
   }
 
-  public async create(productData: Omit<IProductDTO, 'id'>): Promise<Product> {
-    const product = this.ormRepository.create(productData);
-
-    await this.ormRepository.save(product);
-
+  public async findDuplicated({
+    name,
+    category_id,
+  }: Omit<IProductDTO, 'id'>): Promise<Product | undefined> {
+    const product = await this.ormRepository.findOne({
+      where: { name, category_id },
+    });
     return product;
   }
 
