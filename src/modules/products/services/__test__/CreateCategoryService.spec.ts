@@ -20,12 +20,12 @@ describe('CreateCategoryService', () => {
     const createCategory = new CreateCategoryService(fakeCategoryRepository);
 
     await createCategory.execute({
-      name: 'categoria',
+      name: 'category',
     });
 
     expect(
       createCategory.execute({
-        name: 'categoria',
+        name: 'category',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });

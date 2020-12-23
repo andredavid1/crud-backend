@@ -32,7 +32,7 @@ describe('CreateUserService', () => {
       fakeHashProvider,
     );
 
-    const user = await createUser.execute({
+    await createUser.execute({
       name: 'user',
       email: 'email@email.com',
       password: 'password',
@@ -41,8 +41,8 @@ describe('CreateUserService', () => {
     expect(
       createUser.execute({
         name: 'user2',
-        email: user.email,
-        password: 'password',
+        email: 'email@email.com',
+        password: 'password2',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
